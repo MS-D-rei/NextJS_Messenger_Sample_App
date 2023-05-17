@@ -17,7 +17,7 @@ export default function Home() {
           Sign in your account
         </h2>
       </div>
-     <AuthForm />
+      <AuthForm />
     </div>
   );
 }
