@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import Input from '@/components/inputs/Input';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
@@ -53,7 +54,9 @@ function AuthForm() {
         <form
           className="space-y-6"
           onSubmit={handleSubmit(submitHandler)}
-        ></form>
+        >
+          <Input />
+        </form>
       </div>
     </div>
   );
