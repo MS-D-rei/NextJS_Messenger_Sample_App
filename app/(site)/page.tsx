@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import messengerLogo from '@/public/images/Messenger-Logo-PNG.png';
+import AuthForm from '@/app/(site)/components/AuthForm';
 
 export default function Home() {
   return (
@@ -16,7 +17,7 @@ export default function Home() {
           Sign in your account
         </h2>
       </div>
-      {/* Auth Form */}
+     <AuthForm />
     </div>
   );
 }
