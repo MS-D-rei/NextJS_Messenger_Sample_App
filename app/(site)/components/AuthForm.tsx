@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/app/components/inputs/Input';
+import Button from '@/app/components/Button';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
@@ -78,10 +79,32 @@ function AuthForm() {
             register={register}
             errors={errors}
           />
-          <div> 
-            <button></button>
+          <div>
+            <Button type="submit" fullWidth={true} disabled={isLoading}>
+              {variant}
+            </Button>
           </div>
         </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div
+              className="
+              absolute
+              inset-0
+              flex
+              items-center
+              "
+            >
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="flex relative justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
