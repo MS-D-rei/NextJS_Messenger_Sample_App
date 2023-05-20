@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mysql-dev:
     image: mysql:8.0
-    container_name: mysql
+    container_name: mysql-dev
     env_file:
       - ./docker-env/mysql-dev.env
     volumes:
@@ -17,3 +17,6 @@ services:
       - ./docker-env/mysql-test.env
     ports:
       - 3307:3306
+
+volumes:
+  mysql-volume:
