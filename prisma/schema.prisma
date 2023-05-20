@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  username       String
+  email          String    @unique
+  emailVerified  DateTime?
+  hashedPassword String
+  image          String?
+
+  // 1 : m relation
+  accounts Account[]
+  messages Message[]
+
+  // m : m relation
+  conversations Conversation[]
+
+  seenMessages Message[] @relation("UserSeenMessages")
+
+  // register User model as users table at database side
+  @@map("users")
+}
+
+model Account {
+  id Int @id @default(autoincrement())
+
+  provider          String
+  providerAccountId String
+
+  access_token  String?
+  refresh_token String?
+  expires_at    Int?
+  token_type    String?
+  scope         String?
+  id_token      String?
+  session_state String?
+
+  // m : 1 relation
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  // conbination of provider and providerAccountId is unique
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Conversation {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  lastMessageAt DateTime @default(now())
+
+  name    String?
+  isGroup Boolean?
+
+  // 1 : m relation
+  messages Message[]
+
+  // m : m relation
+  users User[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  text  String?
+  image String?
+
+  // m : 1 relation
+  sender         User         @relation(fields: [senderId], references: [id])
+  senderId       Int
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId Int
+
+  // m : m relation
+  seenBy User[] @relation("UserSeenMessages")
+
+  @@map("messages")
+}
