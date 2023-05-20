@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:migrate:dev:dev": "dotenv -e ./dotenv-env/.env.development -- prisma migrate dev",
+    "prisma:migrate:dev:test": "dotenv -e ./dotenv-env/.env.test -- prisma migrate dev"
   },
   "dependencies": {
     "@prisma/client": "^4.14.1",
