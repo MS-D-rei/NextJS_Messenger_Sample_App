@@ -11,14 +11,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  username       String
-  email          String    @unique
-  emailVerified  DateTime?
-  hashedPassword String
+  username       String?
+  email          String?   @unique
+  emailVerified  DateTime? @map("email_verified")
+  hashedPassword String?   @map("hashed_password")
   image          String?
 
   // 1 : m relation
@@ -35,10 +35,10 @@ model User {
 }
 
 model Account {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
   provider          String
-  providerAccountId String
+  providerAccountId String @map("provider_account_id")
 
   access_token  String?
   refresh_token String?
@@ -49,8 +49,8 @@ model Account {
   session_state String?
 
   // m : 1 relation
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   // conbination of provider and providerAccountId is unique
   @@unique([provider, providerAccountId])
@@ -58,9 +58,9 @@ model Account {
 }
 
 model Conversation {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  lastMessageAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now()) @map("created_at")
+  lastMessageAt DateTime @default(now()) @map("last_message_at")
 
   name    String?
   isGroup Boolean?
@@ -75,17 +75,17 @@ model Conversation {
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
 
   text  String?
   image String?
 
   // m : 1 relation
   sender         User         @relation(fields: [senderId], references: [id])
-  senderId       Int
+  senderId       String       @map("sender_id")
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-  conversationId Int
+  conversationId String       @map("conversation_id")
 
   // m : m relation
   seenBy User[] @relation("UserSeenMessages")
