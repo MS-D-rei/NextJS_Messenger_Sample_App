@@ -28,7 +28,7 @@ model User {
   // m : m relation
   conversations Conversation[]
 
-  seenMessages Message[] @relation("UserSeenMessages")
+  seen_messages Message[] @relation("user_seen_messages")
 
   // register User model as users table at database side
   @@map("users")
@@ -88,7 +88,7 @@ model Message {
   conversationId String       @map("conversation_id")
 
   // m : m relation
-  seenBy User[] @relation("UserSeenMessages")
+  seen_by User[] @relation("user_seen_messages")
 
   @@map("messages")
 }
