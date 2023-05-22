@@ -7,6 +7,7 @@ import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import AuthSocialButton from '@/app/(site)/components/AuthSocialButton';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
+import { toast } from 'react-hot-toast';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
@@ -36,7 +37,10 @@ function AuthForm() {
     if (variant === 'REGISTER') {
       console.log('Submit handle started');
       console.log(data);
-      axios.post('/api/register', data);
+      axios.post('/api/register', data).catch((err) => {
+        toast.error(`Error: ${err.message}`);
+        console.log(err);
+      });
       console.log('Submit handle ended');
     }
 
@@ -65,7 +69,7 @@ function AuthForm() {
               id="username"
               label="Username"
               type="text"
-              required={true}
+              required={false}
               register={register}
               errors={errors}
             />
@@ -74,7 +78,7 @@ function AuthForm() {
             id="email"
             label="Email"
             type="email"
-            required={true}
+            required={false}
             register={register}
             errors={errors}
           />
@@ -82,7 +86,7 @@ function AuthForm() {
             id="password"
             label="Password"
             type="password"
-            required={true}
+            required={false}
             register={register}
             errors={errors}
           />
