@@ -3,11 +3,12 @@
 import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { signIn } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
+import { BsGithub, BsGoogle } from 'react-icons/bs';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
 import AuthSocialButton from '@/app/(site)/components/AuthSocialButton';
-import { BsGithub, BsGoogle } from 'react-icons/bs';
-import { toast } from 'react-hot-toast';
 
 type Variant = 'LOGIN' | 'REGISTER';
 
@@ -45,7 +46,23 @@ function AuthForm() {
     }
 
     if (variant === 'LOGIN') {
-      // NextAuth Login
+      signIn('credentials', { ...data, redirect: false }).then((callback) => {
+        // console.log(callback);
+        /* the content of callback in case of error  
+         * error: "Incorrect credentials"
+         * ok: true
+         * status: 200
+         * url:null
+         * */
+        if (callback?.error) {
+          toast.error(`Error: ${callback.error}`);
+          console.log(callback.error);
+        }
+
+        if (callback?.ok && !callback.error) {
+          toast.success('Logged in successfully!');
+        }
+      });
     }
 
     setIsloading(false);
