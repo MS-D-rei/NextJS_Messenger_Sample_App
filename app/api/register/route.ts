@@ -3,6 +3,9 @@ import bcrypt from 'bcrypt';
 import prisma from '@/app/libs/prismadb';
 import { NextResponse } from 'next/server';
 
+console.log('Registering user started');
+performance.mark('register-start');
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -29,3 +32,9 @@ export async function POST(req: Request) {
     return new NextResponse('Internal error', { status: 500 });
   }
 }
+
+performance.mark('register-end');
+
+performance.measure('register', 'register-start', 'register-end');
+const result = performance.getEntriesByName('register')[0];
+console.log(`Registering user ended - took ${result.duration}ms`);
