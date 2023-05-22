@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Input from '@/app/components/inputs/Input';
@@ -33,7 +34,10 @@ function AuthForm() {
     setIsloading(true);
 
     if (variant === 'REGISTER') {
-      // Axios Register
+      console.log('Submit handle started');
+      console.log(data);
+      axios.post('/api/register', data);
+      console.log('Submit handle ended');
     }
 
     if (variant === 'LOGIN') {
