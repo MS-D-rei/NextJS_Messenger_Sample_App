@@ -12,7 +12,9 @@ export async function POST(req: Request) {
     const { username, email, password } = body;
 
     if (!username || !email || !password) {
-      return new NextResponse('Missing info', { status: 400 });
+      // this will be axios error.response.data and status
+      // also will be axios error.request.response and status
+      return new NextResponse('Missing credentials', { status: 400 });
     }
 
     const saltRounds = 12;
