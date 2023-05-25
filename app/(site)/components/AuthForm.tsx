@@ -36,7 +36,7 @@ function AuthForm() {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      username: '',
+      name: '',
       email: '',
       password: '',
     },
@@ -109,7 +109,7 @@ function AuthForm() {
         <form className="space-y-6" onSubmit={handleSubmit(submitHandler)}>
           {variant === 'REGISTER' && (
             <Input
-              id="username"
+              id="name"
               label="Username"
               type="text"
               required={false}
