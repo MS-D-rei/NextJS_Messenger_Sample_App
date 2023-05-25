@@ -37,15 +37,16 @@ model User {
 model Account {
   id String @id @default(cuid())
 
+  type              String
   provider          String
   providerAccountId String @map("provider_account_id")
 
-  access_token  String?
-  refresh_token String?
+  access_token  String? @db.Text
+  refresh_token String? @db.Text
   expires_at    Int?
   token_type    String?
   scope         String?
-  id_token      String?
+  id_token      String? @db.Text
   session_state String?
 
   // m : 1 relation
