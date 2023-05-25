@@ -15,7 +15,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  username       String?
+  name           String?
   email          String?   @unique
   emailVerified  DateTime? @map("email_verified")
   hashedPassword String?   @map("hashed_password")
