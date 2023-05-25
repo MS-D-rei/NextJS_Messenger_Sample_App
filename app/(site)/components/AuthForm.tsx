@@ -1,9 +1,10 @@
 'use client';
 
 import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
 import Input from '@/app/components/inputs/Input';
@@ -15,6 +16,15 @@ type Variant = 'LOGIN' | 'REGISTER';
 function AuthForm() {
   const [variant, setVariant] = useState<Variant>('LOGIN');
   const [isLoading, setIsloading] = useState(false);
+
+  const router = useRouter();
+  const session = useSession();
+
+  useEffect(() => {
+    if (session.status === 'authenticated') {
+      router.push('/users');
+    }
+  }, [session.status, router]);
 
   const toggleVariant = useCallback(() => {
     setVariant((prev) => (prev === 'LOGIN' ? 'REGISTER' : 'LOGIN'));
@@ -38,10 +48,15 @@ function AuthForm() {
     if (variant === 'REGISTER') {
       console.log('Submit handle started');
       console.log(data);
-      axios.post('/api/register', data).catch((err) => {
-        toast.error(`Error: ${err.message}`);
-        console.log(err);
-      });
+
+      axios
+        .post('/api/register', data)
+        .then(() => {signIn('credentials', { ...data, callbackUrl: '/users' })})
+        .catch((err) => {
+          toast.error(`Error: ${err.message}`);
+          console.log(err);
+        });
+
       console.log('Submit handle ended');
     }
 
@@ -61,6 +76,7 @@ function AuthForm() {
 
         if (callback?.ok && !callback.error) {
           toast.success('Logged in successfully!');
+          router.push('/users');
         }
       });
     }
