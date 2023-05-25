@@ -48,7 +48,7 @@ function AuthForm() {
     if (variant === 'LOGIN') {
       signIn('credentials', { ...data, redirect: false }).then((callback) => {
         // console.log(callback);
-        /* the content of callback in case of error  
+        /* the content of callback in case of error
          * error: "Incorrect credentials"
          * ok: true
          * status: 200
@@ -72,6 +72,16 @@ function AuthForm() {
     setIsloading(true);
 
     // NextAuth Social Login
+    signIn(action, { redirect: false }).then((callback) => {
+      if (callback?.error) {
+        toast.error(`Error: ${callback.error}`);
+        console.log(callback.error);
+      }
+
+      if (callback?.ok && !callback.error) {
+        toast.success('Logged in successfully!');
+      }
+    });
 
     setIsloading(false);
   };
