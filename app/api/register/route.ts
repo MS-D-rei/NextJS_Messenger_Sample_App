@@ -9,20 +9,21 @@ performance.mark('register-start');
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { username, email, password } = body;
+    const { name, email, password } = body;
 
-    if (!username || !email || !password) {
+    const isMissingCredentials = !name || !email || !password;
+    if (isMissingCredentials) {
       // this will be axios error.response.data and status
       // also will be axios error.request.response and status
       return new NextResponse('Missing credentials', { status: 400 });
     }
 
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const SALT_ROUNDS = 12;
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const user = await prisma.user.create({
       data: {
-        username,
+        name,
         email,
         hashedPassword,
       },

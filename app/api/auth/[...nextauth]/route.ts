@@ -26,7 +26,9 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         // Add logic here to look up the user from the credentials supplied.
-        if (!credentials?.email || !credentials?.password) {
+        const isCredentialsMissing =
+          !credentials?.email || !credentials?.password;
+        if (isCredentialsMissing) {
           throw new Error('Please enter your email and password');
         }
 
@@ -36,14 +38,15 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        // In case os user not found or this user registered through social login.
-        if (!user || !user?.hashedPassword) {
+        const isUserNotFound = !user;
+        const isUserRegisteredThroughSocialLogin = !user?.hashedPassword;
+        if (isUserNotFound || isUserRegisteredThroughSocialLogin) {
           throw new Error('Incorrect credentials');
         }
 
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
-          user.hashedPassword
+          user.hashedPassword!
         );
 
         if (!isCorrectPassword) {
