@@ -51,6 +51,7 @@ function DesktopSidebar() {
               label={route.label}
               icon={route.icon}
               isActive={route.isActive}
+              onClick={route.onClick}
             />
           ))}
         </ul>
