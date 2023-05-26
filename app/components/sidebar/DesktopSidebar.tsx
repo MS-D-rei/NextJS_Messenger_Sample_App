@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from "react";
-import { useRoutes } from "@/app/hooks/useRoutes";
-import DesktopSidebarItem from "@/app/components/sidebar/DesktopSidebarItem";
+import { useState } from 'react';
+import { useRoutes } from '@/app/hooks/useRoutes';
+import DesktopSidebarItem from '@/app/components/sidebar/DesktopSidebarItem';
 
 function DesktopSidebar() {
   const routes = useRoutes();
   // const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="
+    <div
+      className="
       hidden
       lg:flex
       lg:flex-col
@@ -24,15 +25,18 @@ function DesktopSidebar() {
       lg:border-r-[1px]
       lg:pb-4
       xl:px-6
-      ">
-      <nav className="
+      "
+    >
+      <nav
+        className="
         flex
         flex-col
         justify-between
         mt-4
-        ">
+        "
+      >
         <ul
-          role='list'
+          role="list"
           className="
           flex
           flex-col
@@ -45,14 +49,14 @@ function DesktopSidebar() {
               key={route.label}
               href={route.href}
               label={route.label}
-              icon ={route.icon}
-              active={route.active}
+              icon={route.icon}
+              isActive={route.isActive}
             />
           ))}
         </ul>
       </nav>
     </div>
-  )
+  );
 }
 
 export default DesktopSidebar;

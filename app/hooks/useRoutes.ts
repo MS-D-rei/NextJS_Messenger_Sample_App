@@ -15,13 +15,13 @@ export const useRoutes = () => {
         label: 'Chat',
         href: '/conversations',
         icon: HiChat,
-        active: pathname === '/conversations' || !!conversationId,
+        isActive: pathname === '/conversations' || !!conversationId,
       },
       {
         label: 'Users',
         href: '/users',
         icon: HiUsers,
-        active: pathname === '/users',
+        isActive: pathname === '/users',
       },
       {
         label: 'Logout',
