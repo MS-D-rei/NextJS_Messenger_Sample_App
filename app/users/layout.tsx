@@ -1,6 +1,9 @@
 import UsersSidebar from '@/app/components/sidebar/UsersSidebar';
+import UserList from '@/app/users/components/UserList';
+import { getUsers } from '@/app/actions/getUsers';
 
-function UsersLayout({ children }: { children: React.ReactNode }) {
+async function UsersLayout({ children }: { children: React.ReactNode }) {
+  const users = await getUsers();
   return (
     // @ts-expect-error Async Server Component
     <UsersSidebar>
@@ -9,6 +12,7 @@ function UsersLayout({ children }: { children: React.ReactNode }) {
         h-full 
         "
       >
+        <UserList items={users} />
         {children}
       </div>
     </UsersSidebar>
