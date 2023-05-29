@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
 import { User } from '@prisma/client';
 import Avatar from '@/app/components/Avatar';
 
@@ -6,8 +9,24 @@ interface UserListItemProps {
 }
 
 const UserListItem: React.FC<UserListItemProps> = ({ data }) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = useCallback(() => {
+    setIsLoading(true);
+
+    axios
+      .post('/api/conversations', { userId: data.id })
+      .then((conversation) => {
+        router.push(`/conversations/${conversation.data.id}}`);
+      });
+
+    setIsLoading(false);
+  }, [data.id, router]);
+
   return (
     <div
+      onClick={handleClick}
       className="
       relative
       w-full
