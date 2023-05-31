@@ -26,7 +26,7 @@ export const useRoutes = () => {
       {
         label: 'Logout',
         href: '#',
-        onClick: () => signOut(),
+        onClick: () => signOut({ callbackUrl: '/' }),
         icon: HiArrowLeftOnRectangle,
       },
     ],
