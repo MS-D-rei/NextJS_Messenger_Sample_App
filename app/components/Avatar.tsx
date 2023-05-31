@@ -26,6 +26,7 @@ function Avatar({ user }: AvatarProps) {
           src={user?.image || '/images/placeholder.jpg'}
           alt="Avatar"
           fill
+          sizes='(min-width: 768px) 44px, 40px'
         />
       </div>
       <span
