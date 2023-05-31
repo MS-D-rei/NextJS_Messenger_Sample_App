@@ -12,7 +12,7 @@ export const getConversations = async () => {
     const conversations = await prisma.conversation.findMany({
       where: {
         users: {
-          every: {
+          some: {
             id: currentUser.id,
           },
         },
@@ -23,13 +23,16 @@ export const getConversations = async () => {
       include: {
         users: true,
         messages: {
-          select: {
-            senderId: true,
+          include: {
+            sender: true,
             seen_by: true,
           },
         },
       },
     });
+
+    console.log('getConversations:');
+    console.log(conversations);
 
     return conversations;
   } catch (err: any) {
