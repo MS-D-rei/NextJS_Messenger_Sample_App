@@ -16,6 +16,8 @@ export const useOtherUser = (
       (user) => user.email !== currentUserEmail
     )[0];
 
+    console.log(otherUser);
+
     return otherUser;
   }, [conversation.users, session.data?.user?.email]);
 
