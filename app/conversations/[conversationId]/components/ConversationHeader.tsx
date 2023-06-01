@@ -2,9 +2,10 @@
 
 import { useMemo } from 'react';
 import Link from 'next/link';
-import { HiChevronLeft } from 'react-icons/hi2';
+import { HiChevronLeft, HiEllipsisHorizontal } from 'react-icons/hi2';
 import { Conversation, User } from '@prisma/client';
 import { useOtherUser } from '@/app/hooks/useOtherUser';
+import Avatar from '@/app/components/Avatar';
 
 interface ConversationHeaderProps {
   conversation: Conversation & {
@@ -15,7 +16,7 @@ interface ConversationHeaderProps {
 const ConversationHeader: React.FC<ConversationHeaderProps> = ({
   conversation,
 }) => {
-  const otherUser = useOtherUser();
+  const otherUser = useOtherUser(conversation);
 
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
@@ -52,9 +53,26 @@ const ConversationHeader: React.FC<ConversationHeaderProps> = ({
           lg:hidden
           "
         >
-          <HiChevronLeft size={24} />
+          <HiChevronLeft size={30} />
         </Link>
+        <Avatar user={otherUser} />
+        <div className="flex flex-col">
+          <div>{conversation.name || otherUser.name}</div>
+          <div className="text-sm font-light text-neutral-500">
+            {statusText}
+          </div>
+        </div>
       </div>
+      <HiEllipsisHorizontal
+        size={30}
+        onClick={() => console.log('clicked')}
+        className="
+        text-sky-500
+        hover:text-sky-600
+        transition
+        cursor-pointer
+        "
+      />
     </div>
   );
 };
