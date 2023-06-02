@@ -20,6 +20,6 @@ export const getMessages = async (conversationId: string) => {
     return messages;
   } catch (err) {
     console.error(err);
-    return null;
+    return [];
   }
 };
