@@ -104,7 +104,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             <p className="text-sm font-medium text-neutral-900 truncate">
               {data.name || otherUser.name}
             </p>
-            {lastMessage.createdAt && (
+            {lastMessage?.createdAt && (
               <p className="text-xs font-light text-gray-400">
                 {format(new Date(lastMessage.createdAt), 'p')}
               </p>
