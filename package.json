@@ -11,6 +11,7 @@
     "prisma:migrate:dev:test": "dotenv -e ./dotenv-env/.env.test -- prisma migrate dev"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.15",
     "@next-auth/prisma-adapter": "^1.0.6",
     "@prisma/client": "^4.14.1",
     "@types/node": "20.1.7",
