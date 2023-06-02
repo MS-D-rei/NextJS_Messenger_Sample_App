@@ -80,6 +80,15 @@ const MessageItem: React.FC<MessageItemProps> = ({ data, isLast }) => {
             <div>{data.text}</div>
           )}
         </div>
+        {isLast && isOwn && seenBy.length > 0 && (
+          <div className='
+            text-xs
+            font-light
+            text-gray-500
+            '>
+            {`Seen by ${seenBy}`}
+          </div>
+        )}
       </div>
     </div>
   );
