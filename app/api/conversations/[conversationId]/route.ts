@@ -14,8 +14,9 @@ export async function DELETE(
     // Check whether the user is logged in
 
     const currentUser = await getCurrentUser();
+    const isUnAuthorized = !currentUser?.id || !currentUser.email;
 
-    if (!currentUser?.id || !currentUser.email) {
+    if (isUnAuthorized) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
