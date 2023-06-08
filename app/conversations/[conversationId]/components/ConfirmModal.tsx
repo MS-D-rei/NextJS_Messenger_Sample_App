@@ -20,6 +20,21 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
   const { conversationId } = useConversation();
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleDelete = useCallback(() => {
+    setIsLoading(true);
+
+    axios
+      .delete(`/api/conversations/${conversationId}`)
+      .then(() => {
+        onClose();
+        router.push('/conversations');
+        router.refresh();
+      })
+      .catch(() => toast.error('Something went wrong. Please try again.'));
+
+    setIsLoading(false);
+  }, [conversationId, onClose, router]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="sm:flex sm:items-start">
@@ -52,7 +67,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
           type="button"
           danger
           disabled={isLoading}
-          onClick={}
+          onClick={handleDelete}
         >
           Delete
         </Button>
