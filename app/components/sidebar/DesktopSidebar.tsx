@@ -5,6 +5,7 @@ import { useRoutes } from '@/app/hooks/useRoutes';
 import { User } from '@prisma/client';
 import DesktopSidebarItem from '@/app/components/sidebar/DesktopSidebarItem';
 import Avatar from '@/app/components/Avatar';
+import SettingModal from '@/app/components/sidebar/SettingModal';
 
 interface DesktopSidebarProps {
   currentUser: User;
@@ -17,8 +18,14 @@ function DesktopSidebar({ currentUser }: DesktopSidebarProps) {
   // console.log(currentUser);
 
   return (
-    <div
-      className="
+    <>
+      <SettingModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        currentUser={currentUser}
+      />
+      <div
+        className="
       hidden
       justify-between
       lg:flex
@@ -34,45 +41,46 @@ function DesktopSidebar({ currentUser }: DesktopSidebarProps) {
       lg:pb-4
       xl:px-6
       "
-    >
-      <nav
-        className="
+      >
+        <nav
+          className="
         flex
         flex-col
         justify-between
         mt-4
         "
-      >
-        <ul
-          role="list"
-          className="
+        >
+          <ul
+            role="list"
+            className="
           flex
           flex-col
           items-center
           space-y-4
           "
-        >
-          {routes.map((route) => (
-            <DesktopSidebarItem
-              key={route.label}
-              href={route.href}
-              label={route.label}
-              icon={route.icon}
-              isActive={route.isActive}
-              onClick={route.onClick}
-            />
-          ))}
-        </ul>
-      </nav>
-      <nav className="flex flex-col items-center justify-center mt-4">
-        <div
-          onClick={() => setIsOpen(true)}
-          className="cursor-pointer transition hover:opacity-75"
-        >
-          <Avatar user={currentUser} />
-        </div>
-      </nav>
-    </div>
+          >
+            {routes.map((route) => (
+              <DesktopSidebarItem
+                key={route.label}
+                href={route.href}
+                label={route.label}
+                icon={route.icon}
+                isActive={route.isActive}
+                onClick={route.onClick}
+              />
+            ))}
+          </ul>
+        </nav>
+        <nav className="flex flex-col items-center justify-center mt-4">
+          <div
+            onClick={() => setIsOpen(true)}
+            className="cursor-pointer transition hover:opacity-75"
+          >
+            <Avatar user={currentUser} />
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }
 
