@@ -91,7 +91,7 @@ const SettingModal: React.FC<SettingModalProps> = ({
                 >
                   Photo
                 </label>
-                <div>
+                <div className='flex items-center gap-x-3 mt-2'>
                   <Image
                     width={48}
                     height={48}
@@ -118,7 +118,7 @@ const SettingModal: React.FC<SettingModalProps> = ({
           </div>
         </div>
 
-        <div>
+        <div className='flex items-center justify-end mt-6 gap-x-6'>
           <Button
             type="button"
             secondary
