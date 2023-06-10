@@ -50,6 +50,8 @@ export async function DELETE(
       },
     });
 
+    console.log( "deletedConversation", deletedConversation );
+
     return NextResponse.json(deletedConversation);
   } catch (err) {
     console.error(err);

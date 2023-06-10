@@ -5,7 +5,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useOtherUser } from '@/app/hooks/useOtherUser';
 import { IoClose, IoTrash } from 'react-icons/io5';
 import Avatar from '@/app/components/Avatar';
-import Modal from '@/app/components/Modal';
+import ConfirmModal from '@/app/conversations/[conversationId]/components/ConfirmModal';
 
 interface ProfileDrawerProps {
   data: Conversation & {
@@ -41,12 +41,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
 
   return (
     <>
-      <Modal
+      <ConfirmModal
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
-      >
-        <div className="bg-white p-5">Hello Modal</div>
-      </Modal>
+      />
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           {/* gray schreen */}
@@ -103,7 +101,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                             {statusText}
                           </div>
                           <div className="flex gap-10 my-8">
-                            <div onClick={() => setIsConfirmModalOpen(true)} className='flex flex-col items-center gap-3'>
+                            <div
+                              onClick={() => setIsConfirmModalOpen(true)}
+                              className="flex flex-col items-center gap-3"
+                            >
                               <div className="flex items-center justify-center flex-col bg-neutral-100 rounded-full h-10 w-10">
                                 <IoTrash size={20} />
                               </div>
