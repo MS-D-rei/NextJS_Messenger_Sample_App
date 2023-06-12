@@ -6,9 +6,10 @@ import { useOtherUser } from '@/app/hooks/useOtherUser';
 import { IoClose, IoTrash } from 'react-icons/io5';
 import Avatar from '@/app/components/Avatar';
 import ConfirmModal from '@/app/conversations/[conversationId]/components/ConfirmModal';
+import AvatarGroup from '@/app/components/AvatarGroup';
 
 interface ProfileDrawerProps {
-  data: Conversation & {
+  conversationWithUsersData: Conversation & {
     users: User[];
   };
   isOpen: boolean;
@@ -16,11 +17,11 @@ interface ProfileDrawerProps {
 }
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
-  data,
+  conversationWithUsersData,
   isOpen,
   onClose,
 }) => {
-  const otherUser = useOtherUser(data);
+  const otherUser = useOtherUser(conversationWithUsersData);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const joinedDate = useMemo(() => {
@@ -28,16 +29,19 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
   }, [otherUser.createdAt]);
 
   const title = useMemo(() => {
-    return data.name || otherUser.name;
-  }, [data.name, otherUser.name]);
+    return conversationWithUsersData.name || otherUser.name;
+  }, [conversationWithUsersData.name, otherUser.name]);
 
   const statusText = useMemo(() => {
-    if (data.isGroup) {
-      return `${data.users.length} members`;
+    if (conversationWithUsersData.isGroup) {
+      return `${conversationWithUsersData.users.length} members`;
     }
 
     return 'Active';
-  }, [data.isGroup, data.users.length]);
+  }, [
+    conversationWithUsersData.isGroup,
+    conversationWithUsersData.users.length,
+  ]);
 
   return (
     <>
@@ -94,7 +98,13 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                         {/* Avatar and Trashbox button */}
                         <div className="flex flex-col items-center">
                           <div className="mb-2">
-                            <Avatar user={otherUser} />
+                            {conversationWithUsersData.isGroup ? (
+                              <AvatarGroup
+                                users={conversationWithUsersData.users}
+                              />
+                            ) : (
+                              <Avatar user={otherUser} />
+                            )}
                           </div>
                           <div>{title}</div>
                           <div className="text-sm text-gray-500">
@@ -117,7 +127,19 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                         {/* other users profile info */}
                         <div className="w-full pt-5 pb-5 sm:pt-0 sm:px-0">
                           <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
-                            {!data.isGroup && (
+                            {/* Group members' email or otherUser email */}
+                            {conversationWithUsersData.isGroup ? (
+                              <div>
+                                <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+                                  Emails
+                                </dt>
+                                <dd className="text-sm text-gray-900 mt-1 sm:col-span-2">
+                                  {conversationWithUsersData.users
+                                    .map((user) => user.email)
+                                    .join(', ')}
+                                </dd>
+                              </div>
+                            ) : (
                               <div>
                                 <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                   Email
@@ -127,7 +149,8 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
                                 </dd>
                               </div>
                             )}
-                            {!data.isGroup && (
+                            {/* OtherUser joined date */}
+                            {!conversationWithUsersData.isGroup && (
                               <>
                                 <hr />
                                 <div>
