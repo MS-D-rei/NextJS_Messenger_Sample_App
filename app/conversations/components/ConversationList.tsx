@@ -8,6 +8,7 @@ import { User } from '@prisma/client';
 import { FullConversationType } from '@/app/types';
 import { useConversation } from '@/app/hooks/useConversation';
 import ConversationItem from '@/app/conversations/components/ConversationItem';
+import GroupChatModal from '@/app/conversations/components/GroupChatModal';
 
 interface ConversationListProps {
   initialConversationData: FullConversationType[];
@@ -29,7 +30,11 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   return (
     <>
-      {/* <GroupChatModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} users={users} /> */}
+      <GroupChatModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        users={users}
+      />
       <aside
         className={clsx(
           `fixed inset-y-0 pb-20 lg:block lg:pb-0 lg:left-20 lg:w-80 overflow-y-auto border-r border-gray-200`,
