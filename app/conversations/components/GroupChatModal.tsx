@@ -20,7 +20,7 @@ interface GroupChatModalProps {
 const GroupChatModal: React.FC<GroupChatModalProps> = ({
   isOpen,
   onClose,
-  users,
+  users = [],
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -85,9 +85,11 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({
                 value={members}
                 options={users.map((user) => ({
                   value: user.id,
-                  lable: user.name,
+                  label: user.name,
                 }))}
-                onChange={(value) => setValue('members', value)}
+                onChange={(value) =>
+                  setValue('members', value, { shouldValidate: true })
+                }
                 disabled={isLoading}
               />
             </div>
