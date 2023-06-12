@@ -6,6 +6,9 @@ import { User } from '@prisma/client';
 import Modal from '@/app/components/Modal';
 import Input from '@/app/components/inputs/Input';
 import Button from '@/app/components/Button';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
 interface GroupChatModalProps {
   isOpen: boolean;
@@ -16,6 +19,7 @@ interface GroupChatModalProps {
 const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose }) => {
 
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FieldValues>({
     defaultValues: {
@@ -27,7 +31,18 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, onClose }) => {
   const members = watch('members');
 
   const submitHandler: SubmitHandler<FieldValues> = (data) => {
+    setIsLoading(true);
 
+    axios.post('/api/conversations', {
+      ...data,
+      isGroup: true,
+    })
+    .then(() => {
+        router.refresh();
+        onClose();
+      })
+    .catch(() => toast.error('Something went wrong. Please try again.'))
+    .finally(() => setIsLoading(false));
   }
 
   return (
