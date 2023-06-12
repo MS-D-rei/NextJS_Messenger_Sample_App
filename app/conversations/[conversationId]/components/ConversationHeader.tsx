@@ -31,7 +31,7 @@ const ConversationHeader: React.FC<ConversationHeaderProps> = ({
   return (
     <>
       <ProfileDrawer
-        data={conversation}
+        conversationWithUsersData={conversation}
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
       />
