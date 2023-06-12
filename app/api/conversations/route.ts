@@ -25,7 +25,7 @@ export async function POST(request: Request) {
           isGroup,
           users: {
             connect: [
-              ...members.map((member: { value: string }) => ({
+              ...members.map((member: { value: string, label: string }) => ({
                 id: member.value,
               })),
               {
