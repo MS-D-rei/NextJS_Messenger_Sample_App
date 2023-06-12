@@ -6,32 +6,33 @@ import { format } from 'date-fns';
 import { FullConversationType } from '@/app/types';
 import { useOtherUser } from '@/app/hooks/useOtherUser';
 import Avatar from '@/app/components/Avatar';
+import AvatarGroup from '@/app/components/AvatarGroup';
 
 interface ConversationItemProps {
-  data: FullConversationType;
+  conversationData: FullConversationType;
   isSelected: boolean;
 }
 
 const ConversationItem: React.FC<ConversationItemProps> = ({
-  data,
+  conversationData,
   isSelected,
 }) => {
   const router = useRouter();
   const session = useSession();
 
-  const otherUser = useOtherUser(data);
+  const otherUser = useOtherUser(conversationData);
 
   const handleClick = useCallback(() => {
-    router.push(`/conversations/${data.id}`);
-  }, [router, data.id]);
+    router.push(`/conversations/${conversationData.id}`);
+  }, [router, conversationData.id]);
 
   const lastMessage = useMemo(() => {
-    const messages = data.messages;
+    const messages = conversationData.messages;
 
     const lastMessage = messages[messages.length - 1];
 
     return lastMessage;
-  }, [data.messages]);
+  }, [conversationData.messages]);
 
   const currentUserEmail = useMemo(() => {
     return session.data?.user?.email;
@@ -90,7 +91,11 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         isSelected ? 'bg-neutral-100' : 'bg-white'
       )}
     >
-      <Avatar user={otherUser} />
+      {conversationData.isGroup ? (
+        <AvatarGroup users={conversationData.users} />
+      ) : (
+        <Avatar user={otherUser} />
+      )}
       <div className="flex-1 min-w-0">
         <div className="focus:outline-none">
           <div
@@ -102,7 +107,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
           "
           >
             <p className="text-sm font-medium text-neutral-900 truncate">
-              {data.name || otherUser.name}
+              {conversationData.name || otherUser.name}
             </p>
             {lastMessage?.createdAt && (
               <p className="text-xs font-light text-gray-400">
@@ -110,11 +115,15 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               </p>
             )}
           </div>
-          <p className={clsx(`
+          <p
+            className={clsx(
+              `
             text-sm
             truncate
           `,
-          hasSeenLastMessage ? 'text-gray-500' : 'text-black font-medium')}>
+              hasSeenLastMessage ? 'text-gray-500' : 'text-black font-medium'
+            )}
+          >
             {lastMessageText}
           </p>
         </div>
