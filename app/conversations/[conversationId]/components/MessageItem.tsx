@@ -1,11 +1,13 @@
 'use client';
 
-import Avatar from '@/app/components/Avatar';
-import { FullMessageType } from '@/app/types';
+import { useState } from 'react';
+import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
+import { FullMessageType } from '@/app/types';
+import Avatar from '@/app/components/Avatar';
+import ImageModal from './ImageModal';
 
 interface MessageItemProps {
   data: FullMessageType;
@@ -13,6 +15,7 @@ interface MessageItemProps {
 }
 
 const MessageItem: React.FC<MessageItemProps> = ({ data, isLast }) => {
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const session = useSession();
 
   const isOwn = session.data?.user?.email === data.sender.email;
@@ -62,8 +65,14 @@ const MessageItem: React.FC<MessageItemProps> = ({ data, isLast }) => {
           </div>
         </div>
         <div className={messageClass}>
+          <ImageModal
+            src={data?.image}
+            isOpen={isImageModalOpen}
+            onClose={() => setIsImageModalOpen(false)}
+          />
           {data.image ? (
             <Image
+              onClick={() => setIsImageModalOpen(true)}
               src={data.image}
               alt="Image"
               height={288}
@@ -81,11 +90,13 @@ const MessageItem: React.FC<MessageItemProps> = ({ data, isLast }) => {
           )}
         </div>
         {isLast && isOwn && seenBy.length > 0 && (
-          <div className='
+          <div
+            className="
             text-xs
             font-light
             text-gray-500
-            '>
+            "
+          >
             {`Seen by ${seenBy}`}
           </div>
         )}
