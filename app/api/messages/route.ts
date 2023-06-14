@@ -5,11 +5,15 @@ import { pusherServer } from '@/app/libs/pusher';
 
 export async function POST(request: Request) {
   try {
+    // check whether user is authorized
+
     const currentUser = await getCurrentUser();
 
     if (!currentUser?.id || !currentUser.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
+
+    // create new message
 
     const body = await request.json();
     const { message, image, conversationId } = body;
@@ -40,6 +44,8 @@ export async function POST(request: Request) {
       },
     });
 
+    // update conversation
+
     const updatedConversation = await prisma.conversation.update({
       where: {
         id: conversationId,
@@ -62,10 +68,14 @@ export async function POST(request: Request) {
       },
     });
 
+    // trigger pusher event to update messages with new message
+
     await pusherServer.trigger(conversationId, 'messages:new', newMessage);
 
     const lastMessage =
       updatedConversation.messages[updatedConversation.messages.length - 1];
+
+    // trigger pusher event to update each user's conversation with lastMessage
 
     updatedConversation.users.map((user) => {
       pusherServer.trigger(user.email!, 'conversation:update', {
