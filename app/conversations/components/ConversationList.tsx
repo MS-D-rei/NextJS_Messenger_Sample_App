@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
+import { useSession } from 'next-auth/react';
 import { MdOutlineGroupAdd } from 'react-icons/md';
+import { find } from 'lodash';
 import { User } from '@prisma/client';
 import { FullConversationType } from '@/app/types';
 import { useConversation } from '@/app/hooks/useConversation';
 import ConversationItem from '@/app/conversations/components/ConversationItem';
 import GroupChatModal from '@/app/conversations/components/GroupChatModal';
+import { pusherClient } from '@/app/libs/pusher';
 
 interface ConversationListProps {
   initialConversationData: FullConversationType[];
@@ -24,9 +27,64 @@ const ConversationList: React.FC<ConversationListProps> = ({
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const session = useSession();
+
   const router = useRouter();
 
   const { conversationId, isOpen } = useConversation();
+
+  const pusherKey = useMemo(() => {
+    return session.data?.user?.email;
+  }, [session.data?.user?.email]);
+
+  // useEffect to update conversation with pusher event
+
+  useEffect(() => {
+    if (!pusherKey) {
+      return;
+    }
+
+    pusherClient.subscribe(pusherKey);
+
+    const newConversationHandler = (newConversation: FullConversationType) => {
+      setConversationData((currentConversations) => {
+        const isNewConversationAlreadyExist = find(currentConversations, {
+          id: newConversation.id,
+        });
+
+        if (isNewConversationAlreadyExist) {
+          return currentConversations;
+        }
+        return [newConversation, ...currentConversations];
+      });
+    };
+
+    const updateConversationHandler = (
+      updatedConversation: FullConversationType
+    ) => {
+      setConversationData((currentConversations) => {
+        return currentConversations.map((currentConvresation) => {
+          if (currentConvresation.id === updatedConversation.id) {
+            return {
+              ...currentConvresation,
+              messages: updatedConversation.messages,
+            };
+          }
+
+          return currentConvresation;
+        });
+      });
+    };
+
+    pusherClient.bind('conversation:new', newConversationHandler);
+    pusherClient.bind('conversation:update', updateConversationHandler);
+
+    return () => {
+      pusherClient.unsubscribe(pusherKey);
+      pusherClient.unbind('conversation:new', newConversationHandler);
+      pusherClient.unbind('conversation:update', newConversationHandler);
+    };
+  }, [pusherKey]);
 
   return (
     <>
