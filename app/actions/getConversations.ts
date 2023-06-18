@@ -31,8 +31,7 @@ export const getConversations = async () => {
       },
     });
 
-    console.log('getConversations:');
-    console.log(conversations);
+    console.log('getConversations:', conversations);
 
     return conversations;
   } catch (err: any) {
