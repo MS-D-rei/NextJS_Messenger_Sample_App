@@ -1,13 +1,17 @@
 'use client';
 
-import { User } from '@prisma/client';
 import Image from 'next/image';
+import { User } from '@prisma/client';
+import { useActiveList } from '../hooks/useActiveList';
 
 interface AvatarProps {
   user: User;
 }
 
 function Avatar({ user }: AvatarProps) {
+  const { members } = useActiveList();
+  const isActive = members.includes(user.id);
+
   return (
     <div className="relative">
       <div
@@ -26,11 +30,13 @@ function Avatar({ user }: AvatarProps) {
           src={user?.image || '/images/placeholder.jpg'}
           alt="Avatar"
           fill
-          sizes='(min-width: 768px) 44px, 40px'
+          sizes="(min-width: 768px) 44px, 40px"
         />
       </div>
-      <span
-        className="
+      {/* active icon */}
+      {isActive ? (
+        <span
+          className="
         absolute
         block
         rounded-full
@@ -44,7 +50,8 @@ function Avatar({ user }: AvatarProps) {
         md:h-3
         md:w-3
         "
-      />
+        />
+      ) : null}
     </div>
   );
 }
